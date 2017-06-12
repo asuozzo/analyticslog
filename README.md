@@ -9,26 +9,26 @@ Now, run `python logreport.py` and you'll get a file called `report.txt` with an
 ## Databases
 
 **Articles**
-author: integer
-title: text
-slug: text
-lead: text
-body: text
-time: timestamp with time zone
-id: integer
+* author: integer
+* title: text
+* slug: text
+* lead: text
+* body: text
+* time: timestamp with time zone
+* id: integer
 
 **Authors**
-name: text
-bio: text
-id: integer
+* name: text
+* bio: text
+* id: integer
 
 **Log**
-path: text
-ip: inet
-method: text
-status: text
-time: timestamp
-id: integer
+* path: text
+* ip: inet
+* method: text
+* status: text
+* time: timestamp
+* id: integer
 
 
 
