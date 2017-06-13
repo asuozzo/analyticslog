@@ -13,10 +13,7 @@ def connect(database_name="news"):
         print "Error"
 
 
-# 1. What are the most popular three articles of all time? Which articles have been accessed the most? Present this information as a sorted list with the most popular article at the top.
-# note: Log.path = "/article/" + Articles.slug
-
-
+# What are the most popular three articles of all time?
 def topArticles():
     db, cursor = connect()
 
@@ -30,7 +27,8 @@ def topArticles():
 
     return results
 
-# 2. Who are the most popular article authors of all time? That is, when you sum up all of the articles each author has written, which authors get the most page views? Present this as a sorted list with the most popular author at the top.
+
+# How many pageviews has each author gotten?
 def authorViews():
     db, cursor = connect()
 
@@ -44,11 +42,20 @@ def authorViews():
 
     return results
 
-# 3. On which days did more than 1% of requests lead to errors? The log table includes a column status that indicates the HTTP status code that the news site sent to the user's browser. (Refer back to this lesson if you want to review the idea of HTTP status codes.)
+
+# On which days were more than 1% of pageviews errors?
 def errorDays():
     db, cursor = connect()
 
-    query = "SELECT * FROM errors;"
+    query = """
+            SELECT *
+                FROM (
+                    SELECT to_char(date, 'FMMonth FMDD, YYYY'), 100.0*errors/total as percenterrors
+                    FROM pageviewsverrors
+                    )
+                AS errors
+                WHERE percenterrors >= 1;
+            """
 
     cursor.execute(query)
 
@@ -59,13 +66,13 @@ def errorDays():
     return results
 
 
-# Create summary report
+# Format and export report to a text file
 def formatReport():
     pages = topArticles()
     authors = authorViews()
     errors = errorDays()
 
-    f = open("report.txt","w")
+    f = open("report.txt", "w")
 
     f.write("ANALYTICS REPORT\n\nTop pages:\n")
 
@@ -82,14 +89,7 @@ def formatReport():
     f.write("\n\nErrors:\n")
 
     for i in errors:
-        date = datetime.strftime(i[0],'%B %d, %Y')
-        percent = round(i[1],1)
-        f.write(str(date) + " - " + str(percent) + "% errors")
+        percent = round(i[1], 1)
+        f.write(i[0] + " - " + str(percent) + "% errors")
 
 formatReport()
-
-
-
-
-
-

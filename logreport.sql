@@ -21,23 +21,9 @@ CREATE VIEW authorviews AS
 
 --Errors
 CREATE VIEW pageviewsverrors AS
-    SELECT Log.time::date,
-           count(*) FILTER (WHERE status = '200 OK') as success,
+    SELECT Log.time::date as date,
+           count(*) as total,
            count(*) FILTER (WHERE status = '404 NOT FOUND') as errors
         FROM Log
         GROUP BY Log.time::date
-        ORDER BY success desc;
-
-
-CREATE VIEW errors AS
-    SELECT *
-        FROM (
-            SELECT time, 100.0*errors/(errors+success) as percenterrors
-            FROM pageviewsverrors
-            )
-        AS errors
-        WHERE percenterrors >= 1
-        ORDER BY percenterrors desc;
-
--- errors per day
--- count
+        ORDER BY total desc;
